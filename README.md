@@ -5,6 +5,7 @@ It's manager for your pages like mobile app.<br>
 #### `import Navigator from './mobile-navigation-controller';`
 
 <br>
+For example:
 In the render function return
 
  ```
@@ -46,21 +47,122 @@ options => {  animationIn:integer // have defult
 
 ## Options:
 
-### Navigator props 
-``onRef={ref => (this.navigatorRef = ref)}`` required
-<br>
-``key={string}`` Required
-<br>
-``height={...}``
-<br>
-``onChangePage={(nowPageKey,levelAction) => { ... }}`` levelAction==>> "Out"||"In"||"SameLevel"
-<br>
-``beforChangePage={(goToPageKey,levelAction) => { ... }}`` levelAction==>> "Out"||"In"||"SameLevel"
-<br>
-``homePageKey={"home"}``  defult==>> The key of the first child
+### Navigator props
 
-### Child props 
-``levelPage=={integer}`` important
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>type</th>
+       <th></th>
+       <th>defult</th>
+     <th>node</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>onRef</td>
+     <td></td>
+      <td>required</td>
+     <td>-</td>
+     <td> onRef={ref => (this.navigatorRef = ref)} </td>
+    </tr>
+    <tr>
+      <td>key</td>
+     <td>string</td>
+      <td>required</td>
+     <td>-</td>
+     <td></td>
+    </tr>
+     <tr>
+      <td>height</td>
+     <td>string or integer</td>
+      <td>optional</td>
+      <td>"100%"</td>
+      <td></td>
+    </tr>
+     <tr>
+      <td>onChangePage</td>
+     <td>function</td>
+      <td>optional</td>
+       <td>-</td>
+       <td>(nowPageKey,levelAction) => { ... }</td>
+    </tr>
+   <tr>
+      <td>beforChangePage</td>
+     <td>function</td>
+      <td>optional</td>
+       <td>-</td>
+       <td>(goToPageKey,levelAction) => { ... }</td>
+    </tr>
+    <tr>
+      <td>homePageKey</td>
+     <td>string</td>
+      <td>optional</td>
+       <td>The key of the first child</td>
+       <td>(nowPageKey,levelAction) => { ... }</td>
+    </tr>
+  </tbody>
+</table>
+*levelAction==>> "Out"||"In"||"SameLevel"
+
+
+
+### Child props
+
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>type</th>
+       <th></th>
+       <th>defult</th>
+     <th>node</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>levelPage</td>
+     <td>integer</td>
+      <td>required</td>
+     <td>-</td>
+     <td>important!</td>
+    </tr>
+    <tr>
+      <td>backgroundColor</td>
+     <td>string</td>
+      <td>optional</td>
+     <td>#fff</td>
+     <td></td>
+    </tr>
+     <tr>
+      <td>height</td>
+     <td>string or integer</td>
+      <td>optional</td>
+      <td>"100%"</td>
+      <td></td>
+    </tr>
+     <tr>
+      <td>backOnSwipeRight</td>
+     <td>boolean</td>
+      <td>optional</td>
+       <td>false</td>
+       <td></td>
+    </tr>
+   <tr>
+      <td>alwaysLive</td>
+     <td>boolean</td>
+      <td>optional</td>
+       <td>false</td>
+       <td>Don't kill the child. Life is always in the background</td>
+    </tr>
+    
+  </tbody>
+</table>
+
+``levelPage={integer}`` important
 <br>
 ``backgroundColor="..."``  defult==>> #fff
 <br>
