@@ -162,15 +162,6 @@ options => {  animationIn:integer // have defult
   </tbody>
 </table>
 
-``levelPage={integer}`` important
-<br>
-``backgroundColor="..."``  defult==>> #fff
-<br>
-`` //backOnSwipeRight={true}``defult==>> false
-<br>
-`` //alwaysLive={true}``defult==>> false
-
-
 
 #### Check what is page now
 ```
