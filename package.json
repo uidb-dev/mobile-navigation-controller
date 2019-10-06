@@ -1,6 +1,6 @@
 {
-  "name": "mobile-navigation-controller",
-  "version": "1.0.0",
+  "name": "react.cordova-navigation_controller",
+  "version": "1.4.1",
   "description": "Navigator for Cordova with React.js(react.cordova), This will help you to manage your pages history in the app and change pages with animation.",
   "main": "dist/index.js",
   "scripts": {
@@ -11,26 +11,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orchoban/mobile-navigation-controller.git"
+    "url": "git+https://github.com/orchoban/react.cordova-navigation_controller.git"
   },
   "keywords": [
-    "navigator cordova",
-    "react.cordova navigator",
-    "react.cordova manager_pages",
-    "pages-manager",
-    "navigator",
-    "mobile",
-    "mobile-navigator",
-    "WebView navigator controller",
+    "navigator-react.cordova",
+    "react.cordova-manager_pages",
+    "react.cordova-navigator-controller",
+    "react-cordova-navigator-controller",
+    "react-cordova-pages-manager",
     "navigator-controller",
-    "navigator",
-    "cordova",
-    "ionic",
-    "WebView App",
-    "back on swipe right",
-    "web application",
+    "navigator-cordova-reactjs",
+    "navigator-cordova-react",
+    "navigator cordova react",
+    "react cordova navigator",
+    "react.cordova navigator",
     "manage-pages",
     "historyPages",
+    "Cordova",
     "PhoneGap",
     "jqm",
     "back-button-android"
@@ -39,9 +36,9 @@
     , "email" : "orchoban@gmail.com"},
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/orchoban/mobile-navigation-controller/issues"
+    "url": "https://github.com/orchoban/react.cordova-navigation_controller/issues"
   },
-  "homepage": "https://github.com/orchoban/mobile-navigation-controller#readme",
+  "homepage": "https://github.com/orchoban/react.cordova-navigation_controller#readme",
   "peerDependencies": {
     "prop-types": "^15.6.0",
     "react": "^16.0.0",

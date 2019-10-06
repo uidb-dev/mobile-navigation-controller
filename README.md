@@ -1,8 +1,9 @@
-# mobile-navigation-controller
+# react.cordova-navigation_controller
 
+## Plugin for react
 It's manager for your pages like mobile app.<br>
 
-#### `import Navigator from './mobile-navigation-controller';`
+#### `import Navigator from './react.cordova-navigation_controller';`
 
 <br>
 In the render function return
