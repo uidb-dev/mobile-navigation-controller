@@ -105,7 +105,7 @@ options => {  animationIn:integer // have defult
     </tr>
   </tbody>
 </table>
-*levelAction==>> "Out"||"In"||"SameLevel"
+*levelAction return "Out" or "In" or "SameLevel"
 
 
 
