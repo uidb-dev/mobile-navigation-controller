@@ -53,9 +53,9 @@ options => {  animationIn:integer // have defult
 <table>
   <thead>
     <tr>
-      <th></th>
+      <th>prop</th>
       <th>type</th>
-       <th></th>
+       <th>required</th>
        <th>defult</th>
      <th>node</th>
     </tr>
@@ -115,9 +115,9 @@ options => {  animationIn:integer // have defult
 <table>
   <thead>
     <tr>
-      <th></th>
+      <th>prop</th>
       <th>type</th>
-       <th></th>
+       <th>required</th>
        <th>defult</th>
      <th>node</th>
     </tr>
