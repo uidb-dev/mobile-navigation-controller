@@ -1,6 +1,5 @@
 # mobile-navigation-controller
 
-## Plugin for react
 It's manager for your pages like mobile app.<br>
 
 #### `import Navigator from './mobile-navigation-controller';`
