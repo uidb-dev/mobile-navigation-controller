@@ -189,6 +189,10 @@ const navigator_busy= this.navigatorRef.busy;
 <br><br><br>
 
 
+## If you have any problem, please let us know [here](https://github.com/orchoban/mobile-navigation-controller/issues), and we will make an effort to resolve it soon
+
+
+
 Credit:
 Arik Wald
 <br><br>
