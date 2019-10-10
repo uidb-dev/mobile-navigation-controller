@@ -42,7 +42,7 @@ options => {  animationIn:integer // have defult
             , props:{...} 
               }
 
-*`animationIn` and `animationOut` need name animate from https://daneden.github.io/animate.css/  <br> 
+*`animationIn` and `animationOut` need name animate from [here](https://daneden.github.io/animate.css/)  <br> 
 *the animate.css includ in this package
 
 ## Options:
