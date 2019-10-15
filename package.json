@@ -1,7 +1,7 @@
 {
   "name": "mobile-navigation-controller",
-  "version": "1.0.5",
-  "description": "Navigator for Cordova with React.js(react.cordova), This will help you to manage your pages history in the app and change pages with animation.",
+  "version": "1.0.6",
+  "description": "Navigator for JavaScript mobile app, This will help you to manage your pages history in the app and change pages with animation.",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
