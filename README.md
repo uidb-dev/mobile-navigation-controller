@@ -190,7 +190,7 @@ const navigator_busy= this.navigatorRef.busy;
 
 
 ## If you have any problem, please let us know [here](https://github.com/orchoban/mobile-navigation-controller/issues), and we will make an effort to resolve it soon
-
+## Feel free to editing the code yourself: go to [src/index.js](https://github.com/orchoban/mobile-navigation-controller/blob/master/src/index.js)
 
 
 Credit:
