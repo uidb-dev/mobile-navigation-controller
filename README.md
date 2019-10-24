@@ -184,6 +184,7 @@ or
 ```
 this.navigatorRef.back({options...});
 ```
+options => { animationIn:integer // have defult , animationOut:string // have defult , timeAnimationInMS:integer // defult=250(ms) , callbackFun:function , props:{...} }
 
 #### Check if the mangerPages is busy 
 ```
