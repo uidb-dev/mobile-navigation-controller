@@ -103,6 +103,13 @@ options => {  animationIn:integer // have defult
        <td>The key of the first child</td>
        <td>(nowPageKey,levelAction) => { ... }</td>
     </tr>
+     <tr>
+      <td>changeRoute</td>
+     <td>boolean</td>
+      <td>optional</td>
+       <td>true (on cordova native platforms => false)</td>
+       <td>Determines whether to change the URL to the component key</td>
+    </tr>
   </tbody>
 </table>
 *levelAction return "Out" or "In" or "SameLevel"
