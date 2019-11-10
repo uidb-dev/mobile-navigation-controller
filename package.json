@@ -1,6 +1,6 @@
 {
   "name": "mobile-navigation-controller",
-  "version": "1.2.5",
+  "version": "1.2.7",
   "description": "Navigator for JavaScript mobile app, This will help you to manage your pages history in the app and change pages with animation.",
   "main": "dist/index.js",
   "scripts": {
