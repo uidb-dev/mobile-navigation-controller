@@ -2,7 +2,8 @@ import React from 'react';
 import $ from './jquery-3.3.1.min';
 import './styles.css';
 import './animate.css';
-import { setTimeout } from 'timers';
+
+
 
 export default class Navigator extends React.Component {
 
