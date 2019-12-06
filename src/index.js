@@ -49,10 +49,16 @@ export default class Navigator extends React.Component {
         if (startPage !== homePage)
             historyPages.push(startPage);
 
+        let scrollPages = [];
+        historyPages.forEach(element => {
+            scrollPages[element] = 0;
+        });
+
 
         this.state = {
             changeRoute: changeRoute,
             historyPages: historyPages,
+            scrollPages: scrollPages,
             nowPage: startPage,
             homePageKey: homePage,
             // height: this.props.height ? this.props.height : "100%",
@@ -265,6 +271,10 @@ export default class Navigator extends React.Component {
                     //--נכנסים דף פנימה Up--//
                     this.funAnimationIn1(goToPage, fromPage);
 
+                    let scrollPages = this.state.scrollPages;
+                    scrollPages[fromPage] = document.documentElement.scrollTop;
+                    this.setState({ scrollPages: scrollPages });
+
                     if (this.listLevelPages[goToPage] === 1) {
                         //Up from level 0 to level 1
                         $('#' + goToPage).css('animation', (animationIn !== null && animationIn !== undefined ? animationIn : 'slideInRight') + " " + timeAnimation + 'ms');
@@ -364,13 +374,13 @@ export default class Navigator extends React.Component {
             ? this.props.children.map(child => {
                 return <div
                     // onTouchStart={(e) => {
-                        
-                      
+
+
                     // }}
 
-                    
+
                     onTouchMove={(e) => {
-                        if (child.props.backOnSwipeRight &&!fthis.swipeRight) {
+                        if (child.props.backOnSwipeRight && !fthis.swipeRight) {
                             if (e.touches[0].clientX < (0.20 * innerWidth)) {
                                 fthis.touchBackPage = nowPage;
                                 fthis.swipeRight = true;
@@ -385,7 +395,7 @@ export default class Navigator extends React.Component {
                             }
 
                         }
-                            if (fthis.swipeRight) {
+                        if (fthis.swipeRight) {
                             fthis.setState({ swipeRight_x: (e.touches[0].clientX - fthis.state.swipeRightStart_x) <= 0 ? 1 : e.touches[0].clientX - fthis.state.swipeRightStart_x });
                         }
                     }}

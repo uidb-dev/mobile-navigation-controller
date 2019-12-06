@@ -5,24 +5,24 @@
    * Copyright (c) 2019 Or Chuban
    */
 
-#root, html, body, .body, .top_section, .noScroll {
+/* #root, html, body, .body, .top_section, .noScroll {
   background-attachment: unset !important;
   overflow-x: visible !important;
   overflow-y: visible !important;
   overflow: visible !important;
   -webkit-overflow-scrolling: auto;
-}
+} */
 
 html, body {
-  overflow: hidden !important;
+  /* overflow: hidden !important; */
   height: 100%;
   width: 100%;
 }
 
-body {
+/* body {
   margin: 0;
   padding: 0;
-}
+} */
 
 .showPage {
   width: 100%;
@@ -31,15 +31,15 @@ body {
   z-index: 9;
   display: block;
   left: 0;
-  position: absolute;
+  /* position: absolute; */
 }
 
-.scrollPage {
+/* .scrollPage {
   position: absolute;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-}
+} */
 
 .hiddenPage {
   z-index: -1;
