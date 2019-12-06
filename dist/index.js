@@ -60,15 +60,9 @@ var Navigator = function (_React$Component) {
         historyPages.push(homePage);
         if (startPage !== homePage) historyPages.push(startPage);
 
-        var scrollPages = [];
-        historyPages.forEach(function (element) {
-            scrollPages[element] = 0;
-        });
-
         _this.state = {
             changeRoute: changeRoute,
             historyPages: historyPages,
-            scrollPages: scrollPages,
             nowPage: startPage,
             homePageKey: homePage,
             // height: this.props.height ? this.props.height : "100%",
@@ -267,10 +261,6 @@ var Navigator = function (_React$Component) {
                     if (this.listLevelPages[goToPage] > this.listLevelPages[fromPage]) {
                         //--נכנסים דף פנימה Up--//
                         this.funAnimationIn1(goToPage, fromPage);
-
-                        var scrollPages = this.state.scrollPages;
-                        scrollPages[fromPage] = document.documentElement.scrollTop;
-                        this.setState({ scrollPages: scrollPages });
 
                         if (this.listLevelPages[goToPage] === 1) {
                             //Up from level 0 to level 1
