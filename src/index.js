@@ -2,6 +2,7 @@ import React from 'react';
 import $ from './jquery-3.3.1.min';
 import './styles.css';
 import './animate.css';
+import { Redirect } from 'react-router-dom';
 
 
 
@@ -346,6 +347,9 @@ export default class Navigator extends React.Component {
         const nowPage = this.state.historyPages[this.state.historyPages.length - 1];
         this.historyPages = this.state.historyPages;
         this.nowPage = this.state.nowPage;
+        // var currentRoutes = this.context.router.getCurrentRoutes();
+        // var activeRouteName = currentRoutes[currentRoutes.length - 1].name;
+        // debugger;
 
 
         // if (Array.isArray(this.props.children)) {
@@ -362,79 +366,91 @@ export default class Navigator extends React.Component {
         this.historyPages = this.state.historyPages.slice();
         return Array.isArray(this.props.children)
             ? this.props.children.map(child => {
-                return <div
-                    // onTouchStart={(e) => {
-                        
-                      
-                    // }}
+                debugger
 
-                    
-                    onTouchMove={(e) => {
-                        if (child.props.backOnSwipeRight &&!fthis.swipeRight) {
-                            if (e.touches[0].clientX < (0.20 * innerWidth)) {
-                                fthis.touchBackPage = nowPage;
-                                fthis.swipeRight = true;
-                                fthis.setState({ swipeRightStart_x: e.touches[0].clientX });
+                // childElement.type.name === "Route"
+                //     ? (childElement.props.children ? childElement.props.children : React.createElement(childElement.props.component))
+                //     : childElement;
 
-                                const goToPage = this.state.historyPages[this.state.historyPages.length - 2];
+                return React.cloneElement(
+                    child
+                    , child.key
+                    , <div
+                        // onTouchStart={(e) => {
 
-                                $('#' + goToPage).css('z-index', 0);
-                                $('#' + nowPage).css('z-index', 89);
-                                $('#' + goToPage).removeClass('hiddenPage');
-                                $('#' + goToPage).addClass('showPage overflow_Y_hidden');
+
+                        // }}
+
+
+                        onTouchMove={(e) => {
+                            if (child.props.backOnSwipeRight && !fthis.swipeRight) {
+                                if (e.touches[0].clientX < (0.20 * innerWidth)) {
+                                    fthis.touchBackPage = nowPage;
+                                    fthis.swipeRight = true;
+                                    fthis.setState({ swipeRightStart_x: e.touches[0].clientX });
+
+                                    const goToPage = this.state.historyPages[this.state.historyPages.length - 2];
+
+                                    $('#' + goToPage).css('z-index', 0);
+                                    $('#' + nowPage).css('z-index', 89);
+                                    $('#' + goToPage).removeClass('hiddenPage');
+                                    $('#' + goToPage).addClass('showPage overflow_Y_hidden');
+                                }
+
                             }
-
-                        }
                             if (fthis.swipeRight) {
-                            fthis.setState({ swipeRight_x: (e.touches[0].clientX - fthis.state.swipeRightStart_x) <= 0 ? 1 : e.touches[0].clientX - fthis.state.swipeRightStart_x });
-                        }
-                    }}
-                    onTouchEnd={(e) => {
-                        const goToPage = this.state.historyPages[this.state.historyPages.length - 2];
+                                fthis.setState({ swipeRight_x: (e.touches[0].clientX - fthis.state.swipeRightStart_x) <= 0 ? 1 : e.touches[0].clientX - fthis.state.swipeRightStart_x });
+                            }
+                        }}
+                        onTouchEnd={(e) => {
+                            const goToPage = this.state.historyPages[this.state.historyPages.length - 2];
 
-                        if (fthis.swipeRight && fthis.state.swipeRight_x > (0.25 * innerWidth)) {
+                            if (fthis.swipeRight && fthis.state.swipeRight_x > (0.25 * innerWidth)) {
 
-                            fthis.callbackFunOnChangePage = () => {
-                                $('#' + fthis.touchBackPage).css('left', "");
-                                $('#' + goToPage).removeClass('overflow_Y_hidden');
+                                fthis.callbackFunOnChangePage = () => {
+                                    $('#' + fthis.touchBackPage).css('left', "");
+                                    $('#' + goToPage).removeClass('overflow_Y_hidden');
+                                    fthis.setState({ swipeRight_x: 0 });
+                                    fthis.swipeRight = false;
+                                    fthis.touchBackPage = "";
+                                    fthis.callbackFunOnChangePage = () => { };
+                                }
+
+
+                                // fthis.touchBackPage = nowPage;
+                                fthis.back();
+
+
+                            } else {
+                                $('#' + nowPage).css('left', "");
+                                $('#' + goToPage).css('z-index', "");
+                                $('#' + nowPage).css('z-index', "");
+                                $('#' + goToPage).removeClass('showPage');
+                                $('#' + goToPage).addClass('hiddenPage');
                                 fthis.setState({ swipeRight_x: 0 });
                                 fthis.swipeRight = false;
                                 fthis.touchBackPage = "";
-                                fthis.callbackFunOnChangePage = () => { };
                             }
 
-
-                            // fthis.touchBackPage = nowPage;
-                            fthis.back();
-
-
-                        } else {
-                            $('#' + nowPage).css('left', "");
-                            $('#' + goToPage).css('z-index', "");
-                            $('#' + nowPage).css('z-index', "");
-                            $('#' + goToPage).removeClass('showPage');
-                            $('#' + goToPage).addClass('hiddenPage');
-                            fthis.setState({ swipeRight_x: 0 });
-                            fthis.swipeRight = false;
-                            fthis.touchBackPage = "";
+                            // }
+                        }}
+                        style={{
+                            left: fthis.swipeRight ? (fthis.touchBackPage === child.key ? fthis.state.swipeRight_x : "") : "",
+                            backgroundColor: child.props.backgroundColor ? child.props.backgroundColor : "#fff"
+                            , height: child.props.height ? child.props.height : fthis.props.height ? this.props.height : "100%"
+                        }}
+                        id={child.key} key={child.key} className={fthis.state.startPage === child.key ? "showPage scrollPage" : "hiddenPage"}>
+                       {   child.props.component
+                                ? child.props.component()
+                                : child.props.children  // ? React.cloneElement(
+                            //     child,//childElement
+                            //     fthis.state.props[child.key],
+                            //     child.props.children,
+                            // )}
+                           /* : <div /> */
                         }
-
-                        // }
-                    }}
-                    style={{
-                        left: fthis.swipeRight ? (fthis.touchBackPage === child.key ? fthis.state.swipeRight_x : "") : "",
-                        backgroundColor: child.props.backgroundColor ? child.props.backgroundColor : "#fff"
-                        , height: child.props.height ? child.props.height : fthis.props.height ? this.props.height : "100%"
-                    }}
-                    id={child.key} key={child.key} className={fthis.state.startPage === child.key ? "showPage scrollPage" : "hiddenPage"}>
-                    {nowPage === child.key || fthis.state.historyPages.includes(child.key) || child.props.alwaysLive
-                        ? React.cloneElement(
-                            child,
-                            fthis.state.props[child.key],
-                            child.props.children,
-                        )
-                        : <div />}
-                </div>
+                      
+                    </div>)
             })
             : <div style={{
                 backgroundColor: this.props.children.props.backgroundColor ? this.props.children.props.backgroundColor : "#fff"

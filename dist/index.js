@@ -18,6 +18,8 @@ require('./styles.css');
 
 require('./animate.css');
 
+var _reactRouterDom = require('react-router-dom');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -334,6 +336,10 @@ var Navigator = function (_React$Component) {
             var nowPage = this.state.historyPages[this.state.historyPages.length - 1];
             this.historyPages = this.state.historyPages;
             this.nowPage = this.state.nowPage;
+            // var currentRoutes = this.context.router.getCurrentRoutes();
+            // var activeRouteName = currentRoutes[currentRoutes.length - 1].name;
+            // debugger;
+
 
             // if (Array.isArray(this.props.children)) {
             //     this.props.children.map(child => {
@@ -348,7 +354,13 @@ var Navigator = function (_React$Component) {
 
             this.historyPages = this.state.historyPages.slice();
             return Array.isArray(this.props.children) ? this.props.children.map(function (child) {
-                return _react2.default.createElement(
+                debugger;
+
+                // childElement.type.name === "Route"
+                //     ? (childElement.props.children ? childElement.props.children : React.createElement(childElement.props.component))
+                //     : childElement;
+
+                return _react2.default.cloneElement(child, child.key, _react2.default.createElement(
                     'div',
                     {
                         // onTouchStart={(e) => {
@@ -411,8 +423,14 @@ var Navigator = function (_React$Component) {
                             height: child.props.height ? child.props.height : fthis.props.height ? _this4.props.height : "100%"
                         },
                         id: child.key, key: child.key, className: fthis.state.startPage === child.key ? "showPage scrollPage" : "hiddenPage" },
-                    nowPage === child.key || fthis.state.historyPages.includes(child.key) || child.props.alwaysLive ? _react2.default.cloneElement(child, fthis.state.props[child.key], child.props.children) : _react2.default.createElement('div', null)
-                );
+                    child.props.component ? child.props.component() : child.props.children // ? React.cloneElement(
+                    //     child,//childElement
+                    //     fthis.state.props[child.key],
+                    //     child.props.children,
+                    // )}
+                    /* : <div /> */
+
+                ));
             }) : _react2.default.createElement(
                 'div',
                 { style: {
