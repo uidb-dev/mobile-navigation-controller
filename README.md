@@ -165,6 +165,20 @@ options => {  animationIn:string // have defult
        <td>false</td>
        <td>Don't kill the child. Life is always in the background</td>
     </tr>
+     <tr>
+      <td>transitionIn</td>
+     <td>json</td>
+      <td>optional</td>
+     <td>-</td>
+     <td></td>
+    </tr>
+       <tr>
+      <td>kill</td>
+     <td>boolean</td>
+      <td>optional</td>
+     <td>-</td>
+     <td></td>
+    </tr>
     
   </tbody>
 </table>
