@@ -16,6 +16,13 @@ In the render function return
 
           <AboutPage key="about"
            levelPage={1}
+              transitionIn={
+             animatioPageIn:"fadeInRight"
+             ,animatioPageOut:"fadeOutRight"
+           }
+            transitionOut={{
+            animatioPageOut: "fadeOutRight"
+          }}
            />
 
 
