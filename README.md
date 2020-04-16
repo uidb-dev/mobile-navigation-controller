@@ -2,6 +2,16 @@
 
 It's manager for your pages like mobile app.<br>
 
+<br/><br/>
+
+I dedicate a considerable amount of my free time to developing and maintaining this plugin, along with my other Open Source software. To help ensure this Cli is kept updated, new features are added and bugfixes are implemented quickly, please donate a couple of dollars (or a little more if you can stretch) as this will help me to afford to dedicate time to its maintenance. Please consider donating if you're using this plugin in an app that makes you money, if you're being paid to make the app, if you're asking for new features or priority bug fixes.
+
+<a href="https://paypal.me/orchoban">
+  <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG_global.gif" width="200px" alt=""/>
+</a>
+
+<br/>
+
 #### `import Navigator from 'mobile-navigation-controller';`
 
 <br>
@@ -16,12 +26,12 @@ In the render function return
 
           <AboutPage key="about"
            levelPage={1}
-              transitionIn={
+            transitionIn={
              animatioPageIn:"fadeInRight"
-             ,animatioPageOut:"fadeOutRight"
+             ,animatioPageOut:"fadeOutLeft"
            }
             transitionOut={{
-            animatioPageOut: "fadeOutRight"
+            animatioPageOut: "fadeOutLeft"
           }}
            />
 
@@ -45,8 +55,8 @@ this.navigatorRef.changePage(
 ```
 
 ```
-options => {  animationIn:string // have defult
-            , animationOut:string // have defult
+options = {  animatioPageIn:"fadeInRight" // have defult
+            , animationPageOut:"fadeOutLeft" // have defult
             , timeAnimationInMS:integer // defult=250(ms)
             , callbackFun:function
             , props:{}
@@ -107,18 +117,18 @@ options => {  animationIn:string // have defult
        <td>(goToPageKey,levelAction) => { ... }</td>
     </tr>
     <tr>
-      <td>homePageKey</td>
-     <td>string</td>
-      <td>optional</td>
-       <td>The key of the first child</td>
-       <td>(nowPageKey,levelAction) => { ... }</td>
-    </tr>
-     <tr>
+      <tr>
       <td>changeRoute</td>
      <td>boolean</td>
       <td>optional</td>
        <td>true (on cordova native platforms => false)</td>
        <td>Determines whether to change the URL to the component key</td>
+    </tr>
+      <td>homePageKey</td>
+     <td>string</td>
+      <td>optional</td>
+       <td>The key of the first child</td>
+       <td></td>
     </tr>
   </tbody>
 </table>
@@ -165,16 +175,17 @@ options => {  animationIn:string // have defult
        <td>false</td>
        <td>May be problematic with css "padding-left" </td>
     </tr>
-   <tr>
-      <td>alwaysLive</td>
-     <td>boolean</td>
-      <td>optional</td>
-       <td>false</td>
-       <td>Don't kill the child. Life is always in the background</td>
-    </tr>
-     <tr>
+       <tr>
       <td>transitionIn</td>
-     <td>json</td>
+     <td>json:{ animatioPageIn:string
+             ,animatioPageOut:string}</td>
+      <td>optional</td>
+     <td>-</td>
+     <td></td>
+    </tr>
+      <tr>
+      <td>animationTimeInMS</td>
+     <td>integer</td>
       <td>optional</td>
      <td>-</td>
      <td></td>
@@ -185,6 +196,13 @@ options => {  animationIn:string // have defult
       <td>optional</td>
      <td>-</td>
      <td></td>
+    </tr>
+   <tr>
+      <td>alwaysLive</td>
+     <td>boolean</td>
+      <td>optional</td>
+       <td>false</td>
+       <td>Don't kill the child. Life is always in the background</td>
     </tr>
     
   </tbody>
