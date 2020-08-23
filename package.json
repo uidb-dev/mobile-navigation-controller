@@ -1,6 +1,6 @@
 {
   "name": "mobile-navigation-controller",
-  "version": "1.3.8",
+  "version": "1.4.3",
   "description": "Navigator for JavaScript mobile app, This will help you to manage your pages history in the app and change pages with animation.",
   "main": "dist/index.js",
   "scripts": {
@@ -74,7 +74,10 @@
     "react-dom": "^16.8.6",
     "style-loader": "^0.23.1",
     "webpack": "^4.32.2",
-    "webpack-cli": "^3.3.2",
-    "webpack-dev-server": "^3.4.1"
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "deep-equal": "^2.0.3"
   }
 }
