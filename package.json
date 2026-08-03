@@ -1,6 +1,6 @@
 {
   "name": "mobile-navigation-controller",
-  "version": "1.4.6",
+  "version": "1.5.0",
   "description": "Navigator for JavaScript mobile app, This will help you to manage your pages history in the app and change pages with animation.",
   "main": "dist/index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orchoban/mobile-navigation-controller.git"
+    "url": "git+https://github.com/uidb-dev/mobile-navigation-controller.git"
   },
   "keywords": [
     "navigator cordova",
@@ -46,9 +46,9 @@
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/orchoban/mobile-navigation-controller/issues"
+    "url": "https://github.com/uidb-dev/mobile-navigation-controller/issues"
   },
-  "homepage": "https://github.com/orchoban/mobile-navigation-controller#readme",
+  "homepage": "https://github.com/uidb-dev/mobile-navigation-controller#readme",
   "peerDependencies": {
     "prop-types": "^15.6.0",
     "react": "^18.2.0",
