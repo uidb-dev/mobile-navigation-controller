@@ -1,44 +1,42 @@
 {
   "name": "mobile-navigation-controller",
   "version": "1.5.0",
-  "description": "Navigator for JavaScript mobile app, This will help you to manage your pages history in the app and change pages with animation.",
+  "description": "Level-based back navigation for React mobile & WebView apps: swipe-back, hardware back button, native page transitions.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm --prefix examples test",
     "start": "webpack serve --mode development",
     "transpile": "babel src -d dist --copy-files",
     "prepublishOnly": "npm run transpile"
   },
   "files": [
     "dist/",
-    "examples/",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/uidb-dev/mobile-navigation-controller.git"
   },
   "keywords": [
-    "navigator cordova",
-    "react.cordova navigator",
-    "react.cordova manager_pages",
-    "pages-manager",
-    "navigator",
-    "mobile",
-    "mobile-navigator",
-    "WebView navigator controller",
-    "navigator-controller",
-    "navigator",
+    "swipe-back",
+    "back-navigation",
+    "hardware-back-button",
+    "android-back-button",
+    "navigation-stack",
+    "hierarchical-navigation",
+    "page-transitions",
+    "page-transition",
+    "route-transitions",
+    "native-transitions",
+    "webview",
+    "capacitor",
     "cordova",
     "ionic",
-    "WebView App",
-    "back on swipe right",
-    "web application",
-    "manage-pages",
-    "historyPages",
-    "PhoneGap",
-    "jqm",
-    "back-button-android"
+    "react",
+    "mobile"
   ],
   "author": {
     "name": "Or Chuban(Choban)",
@@ -50,9 +48,8 @@
   },
   "homepage": "https://github.com/uidb-dev/mobile-navigation-controller#readme",
   "peerDependencies": {
-    "prop-types": "^15.6.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.28.3",

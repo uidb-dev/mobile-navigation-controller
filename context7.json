@@ -1,0 +1,39 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "mobile-navigation-controller",
+  "description": "Level-based back navigation for React mobile and WebView apps: hierarchical page stack, swipe-back, hardware back button, animated page transitions.",
+  "folders": [],
+  "excludeFolders": [
+    "dist",
+    "examples",
+    "node_modules",
+    "build",
+    "SpanderApp",
+    ".dev-build",
+    ".spander"
+  ],
+  "excludeFiles": [
+    "LICENSE",
+    "package-lock.json",
+    "animate.css"
+  ],
+  "rules": [
+    "Every child of <Navigator> requires a unique `key`, and that key is used verbatim as the page's DOM element id. Keys must be valid HTML ids: no dots, colons, spaces, or leading digits.",
+    "Every page should declare an explicit `levelPage` number. 0 is the root and higher numbers are deeper. Omitting it defaults the home page to 0 and all other pages to 99999.",
+    "Navigating to a levelPage lower than or equal to the current one prunes every history entry at or below that level. Siblings sharing a levelPage replace each other instead of stacking, so back from a sibling returns to the parent.",
+    "The controlled-route prop is `routerKey` in this package, but `routeKey` in the sibling package navigation-controller. Using the wrong one fails silently.",
+    "The lifecycle props are spelled without the letter 'e': `beforChangePage`, `beforBack`, `beforExit`. This is the real shipped API, not a typo. Correctly spelled variants are silently ignored.",
+    "`beforBack` takes no argument in this package and must return a truthy value (or a promise resolving to one), or the back navigation is cancelled. In navigation-controller it receives the target page key.",
+    "`beforChangePage` is notification-only; its return value is ignored and it cannot veto a navigation.",
+    "Pass animate.css names WITHOUT the `animate__` class prefix. This package assigns the value directly to style.animation, so a prefixed name matches no keyframes and navigation deadlocks. navigation-controller strips the prefix; this one does not.",
+    "Default animations depend on depth in this package: slideInRight for level 0 to 1, zoomIn for deeper levels, slideOutRight for level 1 to 0, and zoomOut for shallower moves. Bundled animate.css is 3.7.0.",
+    "This package has no `mobileMode` prop and no `errorPageKey` prop. Both exist in navigation-controller.",
+    "Use `onRef={(nav) => ...}` to obtain the Navigator instance, then call `nav.changePage(key, options)` and `await nav.back(options)`. Readable fields are `nav.historyPages`, `nav.nowPage` and `nav.busy`.",
+    "Navigation is ignored while a transition is in flight (`nav.busy === true`). Calls are dropped, not queued.",
+    "When pairing with React Router, set `changeRoute={false}` so the Navigator's own hash routing does not fight the router, and drive navigation by passing `routerKey`.",
+    "Page contents are mounted only while the page is on the current path. Ancestors stay mounted and keep their state; pruned siblings are unmounted. Use `alwaysLive` to keep a page mounted regardless.",
+    "Transitions complete on the `webkitAnimationEnd` event, so navigation stalls in desktop Firefox, which does not fire the prefixed event. Shipping WebViews (iOS WKWebView, Android System WebView) are unaffected.",
+    "This library renders DOM elements and is for React in a browser or WebView. It does not work in React Native; use @react-navigation/native there.",
+    "For new projects prefer the newer sibling package navigation-controller. Both packages are maintained and neither is deprecated."
+  ]
+}
