@@ -3,6 +3,22 @@
 All notable changes to `mobile-navigation-controller` are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## 1.5.1
+
+### Fixed
+
+- **The browser's Back button always landed on the home page.** With `changeRoute`
+  enabled, the `hashchange` handler read `window.location.pathname.substr(2)` to work
+  out which page to show — but for a `#page` URL the pathname carries no page key, so
+  that expression is always `""` and the handler fell through to `homePageKey` every
+  time. It now reads the key out of the hash, matching `navigation-controller`.
+  Android's hardware back button and the edge-swipe gesture were never affected.
+
+### Documentation
+
+- Stated the supported platforms (Android, iPhone/iPad) and documented all three back
+  gestures — hardware button, edge swipe, browser Back — and what each one requires.
+
 ## 1.5.0
 
 First release since 1.4.6.

@@ -414,9 +414,16 @@ class Navigator extends _react.default.Component {
       }, false);
 
       //--back on change browser url
-
+      //  Read the page key out of the hash, falling back to the last path
+      //  segment when there is no hash. This used to read
+      //  `window.location.pathname.substr(2)`, which is always "" for a `#page`
+      //  URL -- so the browser Back button always landed on the home page
+      //  instead of the page the user came from.
       if (fthis.state.changeRoute) window.addEventListener("hashchange", function (e) {
-        fthis.changePage(window.location.pathname.substr(2) === "" ? fthis.state.homePageKey : window.location.pathname.substr(2));
+        var href = window.location.href;
+        var lastSlash = href.lastIndexOf("/");
+        var pagePath = href.substr(lastSlash).includes("/#") ? href.substr(lastSlash + 2) : href.substr(lastSlash + 1);
+        fthis.changePage(pagePath === "" ? fthis.state.homePageKey : pagePath);
       });
     } catch (error) {
       fthis.onError(error);

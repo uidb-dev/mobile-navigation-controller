@@ -350,4 +350,36 @@ describe('Navigator', () => {
         expect(nav.busy).toBe(false);
         unmount();
     });
+
+    it('follows the browser Back button to the right page, not to home (regression: pathname parsing)', async () => {
+        let nav = null;
+        const { unmount } = mount(
+            <Navigator changeRoute onRef={(ref) => { nav = ref; }}>
+                <Page key="home" levelPage={0}>home</Page>
+                <Page key="hub" levelPage={1}>hub</Page>
+                <Page key="itemA" levelPage={2}>item A</Page>
+            </Navigator>
+        );
+
+        await navigate(() => nav.changePage('hub'));
+        await finishTransition('hub');
+        await navigate(() => nav.changePage('itemA'));
+        await finishTransition('itemA');
+        expect(nav.nowPage).toBe('itemA');
+
+        // Simulate the browser Back button returning the URL to #hub. The old
+        // handler read window.location.pathname.substr(2), which is always ""
+        // for a `#page` URL, so this always fell through to homePageKey.
+        window.location.hash = '#hub';
+        await act(async () => {
+            window.dispatchEvent(new Event('hashchange'));
+            await tick(0);
+        });
+        await act(async () => { await tick(320); });
+        await finishTransition('itemA');
+
+        expect(nav.nowPage).toBe('hub');
+        expect(nav.nowPage).not.toBe('home');
+        unmount();
+    });
 });
