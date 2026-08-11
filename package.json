@@ -3,16 +3,17 @@
   "version": "1.5.0",
   "description": "Navigator for JavaScript mobile app, This will help you to manage your pages history in the app and change pages with animation.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm --prefix examples test",
     "start": "webpack serve --mode development",
     "transpile": "babel src -d dist --copy-files",
     "prepublishOnly": "npm run transpile"
   },
   "files": [
     "dist/",
-    "examples/",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "repository": {
     "type": "git",
@@ -50,7 +51,6 @@
   },
   "homepage": "https://github.com/uidb-dev/mobile-navigation-controller#readme",
   "peerDependencies": {
-    "prop-types": "^15.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
