@@ -1,8 +1,34 @@
 import React from "react";
-import $ from "./jquery-3.3.1.min";
 import "./styles.css";
 import "./animate.css";
 // import { setTimeout } from "timers";
+
+// --- minimal DOM helpers (replace the previously vendored jQuery build) ---
+// They no-op when the element is missing, matching jQuery's empty-set
+// behaviour, so the surrounding control flow is unchanged.
+const byId = (id) => document.getElementById(id);
+
+const setStyle = (id, prop, value) => {
+  const node = byId(id);
+  if (node) node.style[prop] = value;
+};
+
+const addClass = (id, ...names) => {
+  const node = byId(id);
+  if (node) node.classList.add(...names);
+};
+
+const removeClass = (id, ...names) => {
+  const node = byId(id);
+  if (node) node.classList.remove(...names);
+};
+
+// `props.children` is a single element (not an array) when the consumer renders
+// exactly one page. Normalise before array operations. NOTE: deliberately not
+// React.Children.toArray -- that rewrites keys (".$myKey") and this library uses
+// child keys verbatim as DOM element ids and history entries.
+const asChildArray = (children) =>
+  Array.isArray(children) ? children : children == null ? [] : [children];
 
 export default class Navigator extends React.Component {
   constructor(props) {
@@ -110,11 +136,12 @@ export default class Navigator extends React.Component {
             : 99
           : this.props.children.props.levelPage;
 
-      if (children.props.transitionIn)
-        this.componentTransitionIn[children.key] = children.props.transitionIn;
-      if (children.props.transitionOut)
-        this.componentTransitionOut[children.key] =
-          children.props.transitionOut;
+      if (this.props.children.props.transitionIn)
+        this.componentTransitionIn[this.props.children.key] =
+          this.props.children.props.transitionIn;
+      if (this.props.children.props.transitionOut)
+        this.componentTransitionOut[this.props.children.key] =
+          this.props.children.props.transitionOut;
     }
 
     // const childrenWithProps = React.Children.map(this.props.children, child =>
@@ -134,22 +161,12 @@ export default class Navigator extends React.Component {
     this.funAnimationOut2 = this.funAnimationOut2.bind(this);
     this.compareTwoPagesLavel = this.compareTwoPagesLavel.bind(this);
 
-    if (Array.isArray(this.props.children))
-      this.props.children.map((child) => {
-        if (child.key === null || child.key === "")
-          window.console.error(
-            "navigation_controller: key value it's required"
-          );
-      });
+    asChildArray(this.props.children).forEach((child) => {
+      if (child.key === null || child.key === "")
+        window.console.error("navigation_controller: key value it's required");
+    });
   }
 
-  componentDidMount() {
-    if (this.props.onChangePage !== undefined)
-      this.props.onChangePage(
-        this.state.historyPages[this.state.historyPages.length - 1],
-        "In"
-      );
-  }
   componentDidUpdate(prevProps) {
     if (this.props.routerKey !== prevProps.routerKey) {
       this.changePage(
@@ -198,10 +215,10 @@ export default class Navigator extends React.Component {
         .addEventListener("webkitAnimationEnd", callbackFun, false);
 
       this.busy = true;
-      $("#" + goToPage).removeClass("hiddenPage");
-      $("#" + goToPage).addClass("scrollPage showPage");
-      $("#" + fromPage).css("z-index", 0);
-      $("#" + goToPage).css("z-index", 89);
+      removeClass(goToPage, "hiddenPage");
+      addClass(goToPage, "scrollPage", "showPage");
+      setStyle(fromPage, "zIndex", 0);
+      setStyle(goToPage, "zIndex", 89);
     } catch (error) {
       fthis.onError(error);
     }
@@ -224,12 +241,12 @@ export default class Navigator extends React.Component {
         console.error("fromPage not found: ", fromPage);
       }
 
-      $("#" + fromPage).css("z-index", "");
-      $("#" + goToPage).css("z-index", "");
-      $("#" + goToPage).css("animation", "");
-      $("#" + fromPage).removeClass("showPage");
-      $("#" + fromPage).removeClass("scrollPage");
-      $("#" + fromPage).addClass("hiddenPage");
+      setStyle(fromPage, "zIndex", "");
+      setStyle(goToPage, "zIndex", "");
+      setStyle(goToPage, "animation", "");
+      removeClass(fromPage, "showPage");
+      removeClass(fromPage, "scrollPage");
+      addClass(fromPage, "hiddenPage");
       this.busy = false;
       this.setState({ nowPage: goToPage });
 
@@ -283,10 +300,10 @@ export default class Navigator extends React.Component {
         .getElementById(fromPage)
         .addEventListener("webkitAnimationEnd", callbackFun);
       this.busy = true;
-      $("#" + goToPage).css("z-index", 0);
-      $("#" + fromPage).css("z-index", 89);
-      $("#" + goToPage).removeClass("hiddenPage");
-      $("#" + goToPage).addClass("scrollPage showPage");
+      setStyle(goToPage, "zIndex", 0);
+      setStyle(fromPage, "zIndex", 89);
+      removeClass(goToPage, "hiddenPage");
+      addClass(goToPage, "scrollPage", "showPage");
     } catch (error) {
       fthis.onError(error);
     }
@@ -307,13 +324,13 @@ export default class Navigator extends React.Component {
 
     const fthis = this;
     try {
-      $("#" + fromPage).css("animation", "");
-      $("#" + goToPage).css("z-index", "");
-      $("#" + goToPage).css("left", "");
-      $("#" + fromPage).css("z-index", "");
-      $("#" + fromPage).removeClass("showPage");
-      $("#" + fromPage).removeClass("scrollPage");
-      $("#" + fromPage).addClass("hiddenPage");
+      setStyle(fromPage, "animation", "");
+      setStyle(goToPage, "zIndex", "");
+      setStyle(goToPage, "left", "");
+      setStyle(fromPage, "zIndex", "");
+      removeClass(fromPage, "showPage");
+      removeClass(fromPage, "scrollPage");
+      addClass(fromPage, "hiddenPage");
       this.busy = false;
       this.setState({ nowPage: goToPage });
 
@@ -347,7 +364,6 @@ export default class Navigator extends React.Component {
     try {
       //סיום האפליקציה, סגור
       if (this.state.historyPages.length === 1 && goToPage === undefined) {
-        console.log('"window.navigator.app.exitApp()"');
         // fthis.showSwalLater ?
         //     fthis.myChildrens.swal.runSwal(true) :
         if (this.props.beforExit) if (!this.props.beforExit()) return;
@@ -369,7 +385,9 @@ export default class Navigator extends React.Component {
         return;
       }
 
-      this.props.children
+      const childArray = asChildArray(this.props.children);
+
+      childArray
         .filter((child) => typeof child === "object")
         .forEach((child) => {
           if (child.props.kill) {
@@ -387,10 +405,9 @@ export default class Navigator extends React.Component {
       let aniTime = 250;
 
       if (
-        this.props.children.filter((x) => x.key === goToPage)[0].props
-          .animationTimeInMS
+        childArray.filter((x) => x.key === goToPage)[0].props.animationTimeInMS
       ) {
-        aniTime = this.props.children.filter((x) => x.key === goToPage)[0].props
+        aniTime = childArray.filter((x) => x.key === goToPage)[0].props
           .animationTimeInMS;
       } else {
         if (this.props.animationTimeInMS)
@@ -464,7 +481,8 @@ export default class Navigator extends React.Component {
 
             if (this.listLevelPages[goToPage] === 1) {
               //Up from level 0 to level 1
-              $("#" + goToPage).css(
+              setStyle(
+                goToPage,
                 "animation",
                 (animationIn !== null && animationIn !== undefined
                   ? animationIn
@@ -476,7 +494,8 @@ export default class Navigator extends React.Component {
             } else {
               //else if (this.listLevelPages[goToPage] === 2) {
               //Up from level 1 to level 2
-              $("#" + goToPage).css(
+              setStyle(
+                goToPage,
                 "animation",
                 (animationIn !== null && animationIn !== undefined
                   ? animationIn
@@ -491,7 +510,8 @@ export default class Navigator extends React.Component {
             this.funAnimationOut1(goToPage, fromPage);
             if (this.listLevelPages[fromPage] === 1) {
               //Down from level 1 to level 0
-              $("#" + fromPage).css(
+              setStyle(
+                fromPage,
                 "animation",
                 (animationOut !== null && animationOut !== undefined
                   ? animationOut
@@ -503,7 +523,8 @@ export default class Navigator extends React.Component {
             } else {
               //else if (this.listLevelPages[goToPage] === 1) {
               //Down from level 2 to level 1
-              $("#" + fromPage).css(
+              setStyle(
+                fromPage,
                 "animation",
                 (animationOut !== null && animationOut !== undefined
                   ? animationOut
@@ -558,15 +579,22 @@ export default class Navigator extends React.Component {
     } catch (error) {
       fthis.onError(error);
     }
+
+    //--announce the page the navigator started on. This used to live in a
+    //  second componentDidMount that silently shadowed this one, so it never ran.
+    if (this.props.onChangePage !== undefined)
+      this.props.onChangePage(
+        this.state.historyPages[this.state.historyPages.length - 1],
+        "In"
+      );
   }
 
   async back(options) {
     const fthis = this;
     if (this.props.beforBack) if (!(await this.props.beforBack())) return;
 
-    console.log("navigator back with options: ", options);
     try {
-      fthis.props.children.forEach((child) => {
+      asChildArray(fthis.props.children).forEach((child) => {
         if (child.props.kill) {
           fthis.historyPages = fthis.historyPages.filter(
             (x) => x !== child.key
@@ -577,11 +605,6 @@ export default class Navigator extends React.Component {
 
       //---
       if (options === null || options === undefined) {
-        console.log(
-          "back=> changePage to: ",
-          fthis.state.historyPages[fthis.state.historyPages.length - 2]
-        );
-
         fthis.changePage(
           fthis.state.historyPages[fthis.state.historyPages.length - 2]
         );
@@ -636,10 +659,10 @@ export default class Navigator extends React.Component {
                       this.state.historyPages.length - 2
                     ];
 
-                    $("#" + goToPage).css("z-index", 0);
-                    $("#" + nowPage).css("z-index", 89);
-                    $("#" + goToPage).removeClass("hiddenPage");
-                    $("#" + goToPage).addClass("showPage overflow_Y_hidden");
+                    setStyle(goToPage, "zIndex", 0);
+                    setStyle(nowPage, "zIndex", 89);
+                    removeClass(goToPage, "hiddenPage");
+                    addClass(goToPage, "showPage", "overflow_Y_hidden");
                   }
                 }
                 if (fthis.swipeRight) {
@@ -661,8 +684,8 @@ export default class Navigator extends React.Component {
                   fthis.state.swipeRight_x > 0.25 * innerWidth
                 ) {
                   fthis.callbackFunOnChangePage = () => {
-                    $("#" + fthis.touchBackPage).css("left", "");
-                    $("#" + goToPage).removeClass("overflow_Y_hidden");
+                    setStyle(fthis.touchBackPage, "left", "");
+                    removeClass(goToPage, "overflow_Y_hidden");
                     fthis.setState({ swipeRight_x: 0 });
                     fthis.swipeRight = false;
                     fthis.touchBackPage = "";
@@ -672,11 +695,11 @@ export default class Navigator extends React.Component {
                   // fthis.touchBackPage = nowPage;
                   fthis.back();
                 } else {
-                  $("#" + nowPage).css("left", "");
-                  $("#" + goToPage).css("z-index", "");
-                  $("#" + nowPage).css("z-index", "");
-                  $("#" + goToPage).removeClass("showPage");
-                  $("#" + goToPage).addClass("hiddenPage");
+                  setStyle(nowPage, "left", "");
+                  setStyle(goToPage, "zIndex", "");
+                  setStyle(nowPage, "zIndex", "");
+                  removeClass(goToPage, "showPage");
+                  addClass(goToPage, "hiddenPage");
                   fthis.setState({ swipeRight_x: 0 });
                   fthis.swipeRight = false;
                   fthis.touchBackPage = "";
