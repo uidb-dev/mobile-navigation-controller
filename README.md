@@ -66,7 +66,7 @@ back()                →  ["home", "hub"]              ← lands on the hub
 npm install mobile-navigation-controller
 ```
 
-Peer dependencies: `react` / `react-dom` 18+.
+Peer dependencies: `react` / `react-dom` — React 18 or 19.
 
 ## Minimal working example
 
@@ -239,11 +239,13 @@ Transitions use [animate.css](https://animate.css/) animation names.
 />
 ```
 
-> **Pass the bare animation name — never the `animate__` class prefix.** This package
-> assigns the value straight to `style.animation`, so `"animate__fadeIn"` matches no
-> keyframes, no animation runs, the completion event never fires, and **navigation
-> locks up**. Use `"fadeIn"`. (The sibling package `navigation-controller` strips the
-> prefix for you; this one does not.)
+> **Both `"fadeIn"` and `"animate__fadeIn"` work.** animate.css v4 documents its
+> animations as `animate__`-prefixed *class* names, but the underlying `@keyframes`
+> are unprefixed. This package strips the prefix for you, so either form is safe.
+>
+> In **1.4.6 and earlier this was not true**: a prefixed name matched no keyframes, no
+> animation ran, the completion event never fired, and navigation locked up permanently.
+> If you are on an older version, pass the bare name — or upgrade.
 
 ### Default animations depend on the level
 
@@ -358,7 +360,7 @@ const { key } = useParams();
 | `key` | `string` | **Required**, and becomes the page's DOM `id`. See the gotcha below. |
 | `levelPage` | `number` | Depth. Always set it. |
 | `backOnSwipeRight` | `boolean` | iOS-style edge swipe-back on this page. |
-| `transitionIn` / `transitionOut` | `string` | animate.css names, **without** the `animate__` prefix. |
+| `transitionIn` / `transitionOut` | `string` | animate.css names. The `animate__` prefix is optional — it is stripped for you. |
 | `animationTimeInMS` | `number` | Overrides the Navigator default. |
 | `backgroundColor` | `string` | Wrapper background. Default `"#fff"`. |
 | `height` | `string \| number` | Overrides the Navigator default. |
@@ -403,17 +405,18 @@ These are real, shipped behaviours. Reading this section will save you an aftern
 3. **`beforBack` must return `true`.** A handler that returns `undefined` cancels
    every back navigation, including the hardware back button.
 
-4. **Never pass an `animate__`-prefixed animation name.** See
-   [Animations](#animations) — it silently deadlocks navigation in this package.
+4. **Upgrade if you are below 1.5.0 and use animate.css v4 names.** An
+   `animate__`-prefixed name silently deadlocked navigation in earlier versions. See
+   [Animations](#animations).
 
 5. **Navigation is ignored while `busy`.** One transition at a time; calls during an
    animation are dropped, not queued.
 
-6. **Transitions complete on the `webkitAnimationEnd` event.** That is fine in every
-   WebView you will ship to (iOS WKWebView and Android System WebView are both
-   WebKit/Blink and fire it), but **Firefox does not fire the prefixed event** — so
-   navigation stalls after the first transition when previewing in desktop Firefox.
-   Develop in Chrome/Safari, or test in the real WebView.
+6. **Transitions complete on an animation-end event.** Since 1.5.0 both the prefixed
+   `webkitAnimationEnd` and the standard `animationend` are handled, so desktop Firefox
+   works too. In **1.4.6 and earlier only the prefixed event was used**, so navigation
+   stalled after the first transition when previewing in Firefox — shipping WebViews
+   (iOS WKWebView, Android System WebView) were unaffected.
 
 ---
 
@@ -448,7 +451,7 @@ lineage, and both are maintained.
 | `mobileMode` prop | auto-detect only | yes |
 | `beforBack` argument | *(none)* | `(backToPage)` |
 | Default deep animation | `zoomIn` / `zoomOut` below level 1 | `slideInRight` / `slideOutRight` everywhere |
-| `"animate__"` prefix stripped | **no** — pass the bare name | yes |
+| `"animate__"` prefix stripped | yes (since 1.5.0) | yes |
 | History update on transition | synchronous | promise-sequenced |
 | Bundled animate.css | 3.7.0 | 4.1.1 |
 
