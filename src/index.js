@@ -30,6 +30,37 @@ const removeClass = (id, ...names) => {
 const asChildArray = (children) =>
   Array.isArray(children) ? children : children == null ? [] : [children];
 
+// animate.css v4 ships its animations as `animate__`-prefixed CLASS names while
+// its @keyframes stay unprefixed. This library drives transitions through the
+// `animation` style property, which needs the KEYFRAME name -- so a prefixed
+// value (`animate__slideInRight`, the documented v4 naming) matches no keyframe,
+// no animation runs, no animation-end event ever fires, `busy` latches true and
+// the navigator freezes for good. Normalise every transition name we read.
+const animationName = (name) =>
+  typeof name === "string" ? name.replace("animate__", "") : name;
+
+// Transitions complete on an animation-end event. Older WebKit WebViews only
+// fire the prefixed `webkitAnimationEnd`; Firefox only fires the unprefixed
+// `animationend`. Listen for both, but run the handler EXACTLY ONCE: a browser
+// that emits both would otherwise finish the same navigation twice and
+// double-advance the history stack. Both listeners are detached on the first
+// accepted event. Events bubbling up from animated content *inside* the page are
+// ignored, so page content can never end the page transition early.
+const onAnimationEndOnce = (id, handler) => {
+  // Deliberately not null-guarded: a missing element must throw here, exactly as
+  // the previous inline addEventListener did, so the caller reports via onError
+  // instead of arming a transition that can never complete.
+  const node = document.getElementById(id);
+  const wrapped = (event) => {
+    if (event && event.target !== node) return;
+    node.removeEventListener("webkitAnimationEnd", wrapped);
+    node.removeEventListener("animationend", wrapped);
+    handler();
+  };
+  node.addEventListener("webkitAnimationEnd", wrapped, false);
+  node.addEventListener("animationend", wrapped, false);
+};
+
 export default class Navigator extends React.Component {
   constructor(props) {
     super(props);
@@ -124,9 +155,13 @@ export default class Navigator extends React.Component {
               : child.props.levelPage;
 
           if (child.props.transitionIn)
-            this.componentTransitionIn[child.key] = child.props.transitionIn;
+            this.componentTransitionIn[child.key] = animationName(
+              child.props.transitionIn
+            );
           if (child.props.transitionOut)
-            this.componentTransitionOut[child.key] = child.props.transitionOut;
+            this.componentTransitionOut[child.key] = animationName(
+              child.props.transitionOut
+            );
         });
     } else {
       listLevelPages[this.props.children.key] =
@@ -137,11 +172,13 @@ export default class Navigator extends React.Component {
           : this.props.children.props.levelPage;
 
       if (this.props.children.props.transitionIn)
-        this.componentTransitionIn[this.props.children.key] =
-          this.props.children.props.transitionIn;
+        this.componentTransitionIn[this.props.children.key] = animationName(
+          this.props.children.props.transitionIn
+        );
       if (this.props.children.props.transitionOut)
-        this.componentTransitionOut[this.props.children.key] =
-          this.props.children.props.transitionOut;
+        this.componentTransitionOut[this.props.children.key] = animationName(
+          this.props.children.props.transitionOut
+        );
     }
 
     // const childrenWithProps = React.Children.map(this.props.children, child =>
@@ -199,20 +236,13 @@ export default class Navigator extends React.Component {
         );
 
       //--נכנסים דף פנימה Up--//
-      let callbackFun = () => {
+      onAnimationEndOnce(goToPage, () => {
         try {
           fthis.funAnimationIn2(goToPage, fromPage);
-          document
-            .getElementById(goToPage)
-            .removeEventListener("webkitAnimationEnd", callbackFun);
         } catch (error) {
           fthis.onError(error);
         }
-      };
-
-      document
-        .getElementById(goToPage)
-        .addEventListener("webkitAnimationEnd", callbackFun, false);
+      });
 
       this.busy = true;
       removeClass(goToPage, "hiddenPage");
@@ -286,19 +316,13 @@ export default class Navigator extends React.Component {
           fthis.compareTwoPagesLavel(goToPage, fromPage)
         );
 
-      let callbackFun = () => {
+      onAnimationEndOnce(fromPage, () => {
         try {
           fthis.funAnimationOut2(goToPage, fromPage);
-          document
-            .getElementById(fromPage)
-            .removeEventListener("webkitAnimationEnd", callbackFun);
         } catch (error) {
           fthis.onError(error);
         }
-      };
-      document
-        .getElementById(fromPage)
-        .addEventListener("webkitAnimationEnd", callbackFun);
+      });
       this.busy = true;
       setStyle(goToPage, "zIndex", 0);
       setStyle(fromPage, "zIndex", 89);
@@ -416,7 +440,7 @@ export default class Navigator extends React.Component {
 
       options = options === undefined ? [] : options;
 
-      const {
+      let {
         props = null,
         animationIn = this.componentTransitionIn[goToPage]
           ? this.componentTransitionIn[goToPage]
@@ -429,6 +453,12 @@ export default class Navigator extends React.Component {
           : null,
         callbackFun = null,
       } = options;
+
+      // Caller-supplied animation names go through the same animate.css v4
+      // normalisation as the child transitionIn/transitionOut props: an
+      // `animate__`-prefixed name here would match no keyframe and latch `busy`.
+      animationIn = animationName(animationIn);
+      animationOut = animationName(animationOut);
 
       if (props !== null) {
         // let oldProps = this.state.props;
@@ -582,11 +612,18 @@ export default class Navigator extends React.Component {
 
     //--announce the page the navigator started on. This used to live in a
     //  second componentDidMount that silently shadowed this one, so it never ran.
-    if (this.props.onChangePage !== undefined)
-      this.props.onChangePage(
-        this.state.historyPages[this.state.historyPages.length - 1],
-        "In"
-      );
+    //  Guarded exactly like every other onChangePage call site: a consumer
+    //  handler that throws must be reported through onError, never propagate out
+    //  of componentDidMount and tear down the whole React tree at startup.
+    try {
+      if (this.props.onChangePage !== undefined)
+        this.props.onChangePage(
+          this.state.historyPages[this.state.historyPages.length - 1],
+          "In"
+        );
+    } catch (error) {
+      fthis.onError(error);
+    }
   }
 
   async back(options) {
@@ -749,7 +786,7 @@ export default class Navigator extends React.Component {
             ? this.props.children.props.backgroundColor
             : "#fff",
           height: this.props.children.props.height
-            ? this.props.children.props
+            ? this.props.children.props.height
             : fthis.props.height
             ? this.props.height
             : "100%",
